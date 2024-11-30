@@ -1,0 +1,76 @@
+.swiper {
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 300px;
+    height: 480px;
+  }
+  
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+  }
+
+.swiper-button-prev,
+.swiper-button-next {
+  display: none;
+}
+
+.custom-swiper-button-prev,
+.custom-swiper-button-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #7a00be;
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0%;
+  transform: translateY(-50%);
+  z-index: 10;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #3D005D;
+  }
+}
+
+
+.custom-swiper-button-prev.disabled,
+.custom-swiper-button-next.disabled {
+  background-color: #7a00be;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: #7a00be;
+  }
+}
+
+.custom-swiper-button-prev {
+  right: 300px;
+}
+
+.custom-swiper-button-next {
+  right: 230px;
+}
+
+
+/* Change the color of pagination bullets */
+.swiper-pagination-bullet {
+  background-color: #7a00be; 
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #FF06FF; /* Active bullet color */
+  opacity: 1;
+  transform: scale(1.2); /* Optional: slightly increase size for active bullet */
+}
