@@ -8,7 +8,7 @@ import Image from "next/image"
 
 
 
-const DnDInput = ({ id, acceptedTypes, setNew, initialFile, label, width }: { label: string, setNew: Dispatch<SetStateAction<File | null>>, initialFile: string | null, id: string, acceptedTypes: string, width: string }) => {
+const DnDInput = ({ id, newId, acceptedTypes, handleImageChange, setNew, initialFile, label, width }: { label: string, handleImageChange: Dispatch<SetStateAction<File[]>>, setNew: Dispatch<SetStateAction<File | null>>, initialFile: string | null, id: string, newId: number, acceptedTypes: string, width: string }) => {
     const [file, setFile] = useState<string | null>(initialFile)
     // const [newFileType, setNewFileType] = useState<'image' | 'pdf' | null>(null)
 
@@ -27,6 +27,7 @@ const DnDInput = ({ id, acceptedTypes, setNew, initialFile, label, width }: { la
         const selectedFile = e.target.files?.[0]
         if (selectedFile) {
             setNew(selectedFile)
+            handleImageChange(selectedFile, newId)
             handleFile(selectedFile)
         }
     }

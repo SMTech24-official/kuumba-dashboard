@@ -17,11 +17,26 @@ import { toast } from "sonner"
 export default function AddBooksO() {
     const path = useParams()
     const { data: productsData, isLoading } = useSingleBookQuery(path.id)
+
     const [bookCover, setBookCover] = useState<File | null>(null)
+    const [selectedImages, setSelectedImages] = useState<File[]>([])
     const dispatch = useAppDispatch();
     const [update] = useUpdateBookMutation()
+
     const [deleteProduct] = useDeleteBookMutation()
+
+    const handleImageChange = (newImage: File, idx: number) => {
+        setSelectedImages((prevImages) => {
+            // If the image is being replaced, update it at the specified index
+            const updatedImages = [...prevImages];
+            updatedImages[idx] = newImage; // Replace the image at the given index
+            return updatedImages;
+        });
+    }
+
     const router = useRouter()
+
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, id: string) => {
         try {
             e.preventDefault()
@@ -125,16 +140,25 @@ export default function AddBooksO() {
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-2">
-                    <div className="space-y-2">
-                        <DnDInput
-                            width="w-full"
-                            setNew={setBookCover}
-                            initialFile={productsData?.data?.image}
-                            id="bookCover"
-                            label="Upload Book cover"
-                            acceptedTypes="image"
-                        />
-                    </div>
+                    {
+                        productsData?.data?.images?.map((image: string, idx: number) => {
+                            return (
+                                <div key={idx} className="space-y-2">
+                                    <DnDInput
+                                        width="w-full"
+                                        newId={idx}
+                                        setNew={setBookCover}
+                                        initialFile={image}
+                                        handleImageChange={handleImageChange}
+                                        id="bookCover"
+                                        label={`Upload Book cover ${idx + 1}`}
+                                        acceptedTypes="image"
+                                    />
+                                </div>
+                            )
+                        })
+                    }
+
                 </div>
 
                 <div className="flex gap-4">
