@@ -64,7 +64,7 @@ export default function AddBooksO() {
             const data = Object.fromEntries(Alldata.entries());
 
             if (bookCover) {
-                bookCover?.forEach((image) => {
+                bookCover.forEach((image) => {
                     if (image) {
                         formData.append(`images`, image)
                     }
@@ -83,7 +83,6 @@ export default function AddBooksO() {
                 const sd = Object.fromEntries(formData.entries());
                 console.log(sd);
 
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const finishRes = await handleAsyncWithToast(
                     async () => {
                         return update({ data: formData, id }); // Replace with your actual login function
@@ -94,7 +93,11 @@ export default function AddBooksO() {
                     true,
                     dispatch
                 );
+                if (finishRes?.ok) {
+                    setBookCover(null)
+                }
             }
+
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error("Some error happend")
