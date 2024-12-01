@@ -10,32 +10,49 @@ import { useDeleteBookMutation, useSingleBookQuery, useUpdateBookMutation } from
 import { useAppDispatch } from "@/redux/hooks"
 import { createFile } from "@/utils/downloadImage"
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast"
+import { Plus } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 export default function AddBooksO() {
     const path = useParams()
     const { data: productsData, isLoading } = useSingleBookQuery(path.id)
 
-    const [bookCover, setBookCover] = useState<File | null>(null)
-    const [selectedImages, setSelectedImages] = useState<File[]>([])
+    // eslint-disable-next-line prefer-const
+    const [bookCover, setBookCover] = useState<File[] | null>(null)
+
+
+    const [limit, setLimit] = useState<number>(0)
+    console.log(limit);
     const dispatch = useAppDispatch();
     const [update] = useUpdateBookMutation()
 
     const [deleteProduct] = useDeleteBookMutation()
 
-    const handleImageChange = (newImage: File, idx: number) => {
-        setSelectedImages((prevImages) => {
-            // If the image is being replaced, update it at the specified index
-            const updatedImages = [...prevImages];
-            updatedImages[idx] = newImage; // Replace the image at the given index
-            return updatedImages;
-        });
-    }
-
     const router = useRouter()
 
+
+    useEffect(() => {
+        const fetchImages = async () => {
+            console.log(productsData?.data?.images.length);
+            if (productsData?.data?.images.length > 0) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const allFile = await Promise.all(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    productsData?.data?.images.map(async (image: any) => {
+                        const convertImage = await createFile(image, "image");
+                        return convertImage;
+                    })
+                );
+                setBookCover(allFile);
+            }
+        };
+
+        fetchImages();
+    }, [productsData?.data?.images])
+
+    console.log(bookCover);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, id: string) => {
         try {
@@ -46,9 +63,12 @@ export default function AddBooksO() {
 
             const data = Object.fromEntries(Alldata.entries());
 
-            if (bookCover || productsData?.data?.image) {
-                const file = await createFile(productsData?.data?.image, "image");
-                formData.append("image", bookCover || file)
+            if (bookCover) {
+                bookCover?.forEach((image) => {
+                    if (image) {
+                        formData.append(`images`, image)
+                    }
+                })
 
                 const otherData = {
                     title: data.title,
@@ -56,10 +76,13 @@ export default function AddBooksO() {
                     packageDetails: data.packageDetails,
                     price: parseFloat(data.price as string),
                     quantity: parseInt(data.quantity as string),
+                    regularPrice: parseFloat(data.regularPrice as string),
                 }
-                console.log(otherData);
-
                 formData.append("data", JSON.stringify(otherData))
+
+                const sd = Object.fromEntries(formData.entries());
+                console.log(sd);
+
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const finishRes = await handleAsyncWithToast(
                     async () => {
@@ -105,6 +128,13 @@ export default function AddBooksO() {
 
     }
 
+    const handleImagesLimit = () => {
+        if ((productsData?.data?.images.length + limit) <= 9) {
+            setLimit((prev) => prev + 1)
+        }
+
+    }
+
     return (
         <div className="dashboard-containers ">
             <BreadCrumb />
@@ -137,26 +167,50 @@ export default function AddBooksO() {
                         <Label htmlFor="quantity">Quantity</Label>
                         <Input defaultValue={productsData?.data?.quantity} id="quantity" name="quantity" placeholder="Package Details" />
                     </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="regularPrice">Regular Price</Label>
+                        <Input defaultValue={productsData?.data?.regularPrice} id="regularPrice" name="regularPrice" placeholder="Regular Price" />
+                    </div>
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-2">
+                <div className="grid gap-6 sm:grid-cols-3 items-center justify-center h-full">
                     {
-                        productsData?.data?.images?.map((image: string, idx: number) => {
-                            return (
-                                <div key={idx} className="space-y-2">
-                                    <DnDInput
-                                        width="w-full"
-                                        newId={idx}
-                                        setNew={setBookCover}
-                                        initialFile={image}
-                                        handleImageChange={handleImageChange}
-                                        id="bookCover"
-                                        label={`Upload Book cover ${idx + 1}`}
-                                        acceptedTypes="image"
-                                    />
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        productsData?.data?.images?.map((data: any, idx: number) => <DnDInput
+                            key={idx}
+                            width="w-full"
+                            setNew={setBookCover}
+                            initialFile={data}
+                            id={`bookCover${idx + 1}`}
+                            label={`Upload Product Image ${idx + 1}`}
+                            acceptedTypes="image"
+                        />)
+                    }
+                    {
+                        new Array(limit).fill("").map((data, idx) => (
+                            <DnDInput
+                                key={idx}
+                                width="w-full"
+                                setNew={setBookCover}
+                                initialFile={null}
+                                id={`bookCover${idx + 1}`}  // Ensure the ID is a string
+                                label={`Upload Product Image ${productsData?.data?.images.length + limit}`}
+                                acceptedTypes="image"
+                            />
+                        ))
+
+                    }
+                    {
+                        ((productsData?.data?.images.length + limit) <= 9) && <div>
+                            <Label className="text-gray-500 mb-4 block">Add Another</Label>
+                            <div className="border-2 border-dashed rounded-lg p-6 h-[322px] flex flex-col items-center justify-center cursor-pointer">
+                                <div className=" h-full flex items-center justify-center">
+                                    <button type="button" onClick={handleImagesLimit} className=' rounded-full  text-white bg-primary w-fit'>
+                                        <Plus className="min-h-10 min-w-10  rounded-full" />
+                                    </button>
                                 </div>
-                            )
-                        })
+                            </div>
+                        </div>
                     }
 
                 </div>

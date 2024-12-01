@@ -32,8 +32,9 @@ export type Book = {
   status: string;
   publishedDate: string;
   price: number;
+  regularPrice: number;
   quantity: number;
-  image: string;
+  images: string;
   description: string;
   createdAt: string;
   updatedAt: string;

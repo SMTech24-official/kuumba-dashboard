@@ -44,7 +44,8 @@ const MyBooks = () => {
                             quantity={data.quantity}
                             publishedDate={new Date(data.createdAt)}
                             coinsPerReview={data.price}
-                            imageSrc={data.image}
+                            regularPrice={data.regularPrice}
+                            imageSrc={data.images[0]}
                         />
                     ))
                     }

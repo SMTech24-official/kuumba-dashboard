@@ -8,7 +8,7 @@ import Image from "next/image"
 
 
 
-const DnDInput = ({ id, newId, acceptedTypes, handleImageChange, setNew, initialFile, label, width }: { label: string, handleImageChange: Dispatch<SetStateAction<File[]>>, setNew: Dispatch<SetStateAction<File | null>>, initialFile: string | null, id: string, newId: number, acceptedTypes: string, width: string }) => {
+const DnDInput = ({ id, acceptedTypes, setNew, initialFile, label, width }: { label: string, setNew: Dispatch<SetStateAction<File[] | null>>, initialFile: string | null, id: string, acceptedTypes: string, width: string }) => {
     const [file, setFile] = useState<string | null>(initialFile)
     // const [newFileType, setNewFileType] = useState<'image' | 'pdf' | null>(null)
 
@@ -19,15 +19,40 @@ const DnDInput = ({ id, newId, acceptedTypes, handleImageChange, setNew, initial
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault()
         const droppedFile = e.dataTransfer.files[0]
-        setNew(droppedFile)
-        handleFile(droppedFile)
+        if (droppedFile) {
+            setNew((prevImages) => {
+                if (prevImages) {
+                    console.log(prevImages);
+                    console.log("undefined");
+                    const newImages = [...prevImages, droppedFile]
+                    return newImages
+                }
+                else {
+                    console.log("ei ta");
+                    return [droppedFile]
+                }
+
+            })
+            handleFile(droppedFile)
+        }
     }
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0]
         if (selectedFile) {
-            setNew(selectedFile)
-            handleImageChange(selectedFile, newId)
+            setNew((prevImages) => {
+                if (prevImages) {
+                    console.log(prevImages);
+                    console.log("undefined");
+                    const newImages = [...prevImages, selectedFile]
+                    return newImages
+                }
+                else {
+                    console.log("ei ta");
+                    return [selectedFile]
+                }
+
+            })
             handleFile(selectedFile)
         }
     }

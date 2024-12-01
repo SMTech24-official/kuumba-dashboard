@@ -4,7 +4,7 @@ export async function createFile(url: string, fileName: string) {
     const metadata = {
       type: "image/jpeg",
     };
-    const file = new File([data], fileName, metadata);
+    const file =  new File([data], fileName, metadata);
     return file;
   }
   

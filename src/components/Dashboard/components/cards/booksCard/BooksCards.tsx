@@ -10,6 +10,7 @@ export default function BooksCards({
   id,
   publishedDate,
   coinsPerReview,
+  regularPrice,
   quantity,
   imageSrc,
   details
@@ -18,6 +19,7 @@ export default function BooksCards({
   id?: string;
   publishedDate: Date;
   coinsPerReview: number;
+  regularPrice: number;
   quantity: number;
   imageSrc: string;
   details: string;
@@ -79,6 +81,16 @@ export default function BooksCards({
               />
               <span className="text-sm text-muted-foreground">
                 ${coinsPerReview}
+              </span>
+            </div>
+            <div className="flex items-center gap-1 ">
+              <Image
+                src={coins}
+                alt="icon of coins earned by reding"
+                className="max-w-6 max-h-6"
+              />
+              <span className="text-sm text-muted-foreground">
+                Regular: ${regularPrice}
               </span>
             </div>
           </div>
