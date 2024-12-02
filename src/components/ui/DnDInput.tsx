@@ -7,8 +7,18 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 
 
 
-const DnDInput = ({ id, acceptedTypes, setNew, initialFile, label, width, handleDelete }: { label: string, setNew: Dispatch<SetStateAction<File[] | null>>, initialFile: string | null, id: string, acceptedTypes: string, width: string, handleDelete: (id?: string) => void }) => {
-    const [file, setFile] = useState<string | null>(initialFile)
+const DnDInput = ({ id, acceptedTypes, setNew, initialFile, label, width, handleDelete }:
+    {
+        label: string,
+        setNew: Dispatch<SetStateAction<File[] | null>>,
+        initialFile: string | null, id: string,
+        acceptedTypes: string, width: string,
+        handleDelete: (id?: string | File) => void
+    }) => {
+
+
+
+    const [file, setFile] = useState<string | null | File>(initialFile)
     // const [newFileType, setNewFileType] = useState<'image' | 'pdf' | null>(null)
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -82,7 +92,7 @@ const DnDInput = ({ id, acceptedTypes, setNew, initialFile, label, width, handle
                         <div className="w-36 h-36 md:w-44 md:h-44 mb-4">
                             {acceptedTypes === 'image' ? (
                                 <Image
-                                    src={file}
+                                    src={URL.createObjectURL(file as Blob)}
                                     alt="Uploaded file"
                                     width={180}
                                     height={180}
@@ -96,7 +106,8 @@ const DnDInput = ({ id, acceptedTypes, setNew, initialFile, label, width, handle
                         </div>
 
                         <button type="button" onClick={() => {
-                            handleDelete(id)
+
+                            handleDelete(file)
                             setFile(null)
                         }} className='absolute top-2 right-2 border p-2 rounded-full bg-red-100 hidden group-hover:block transition-all '>
                             <Trash2 stroke="red" fill='white' />

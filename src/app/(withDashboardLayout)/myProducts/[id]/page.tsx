@@ -141,10 +141,10 @@ export default function AddBooksO() {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleRemoveItem = (id?: string) => {
-        if (id) {
-            const element = document.getElementById(id);
-            element?.remove();
+    const handleRemoveItem = (file?: string | File) => {
+        const newBook = bookCover?.filter(data => data !== file)
+        if (newBook) {
+            setBookCover(newBook)
         }
     }
 
@@ -189,7 +189,7 @@ export default function AddBooksO() {
                 <div className="grid gap-6 sm:grid-cols-3 items-center justify-center h-full">
                     {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        productsData?.data?.images?.map((data: any, idx: number) => <DnDInput
+                        bookCover?.map((data: any, idx: number) => <DnDInput
                             handleDelete={handleRemoveItem}
                             key={idx}
                             width="w-full"
