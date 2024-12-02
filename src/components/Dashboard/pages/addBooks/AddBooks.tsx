@@ -78,6 +78,12 @@ export default function AddBooksO() {
         }
     }
 
+    const handleDelete = () => {
+        if (limit <= 9) {
+            setLimit((prev) => prev - 1)
+        }
+    }
+
     return (
         <div className="">
             <BreadCrumb />
@@ -120,6 +126,7 @@ export default function AddBooksO() {
                     <div className="grid gap-6 sm:grid-cols-3 items-center justify-center h-full">
                         {
                             new Array(limit).fill("").map((data, idx) => <DnDInput
+                                handleDelete={handleDelete}
                                 key={idx}
                                 width="w-full"
                                 setNew={setBookCover}
