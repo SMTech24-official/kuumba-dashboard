@@ -48,7 +48,7 @@ export function OrderDetails() {
               <p><strong>Total:</strong> ${calculateTotalPrice(SingleOrder?.data[0].items)}</p>
             </div>
           </div>
-          <div className="mt-6">
+          <div className="mt-6"> 
             <h3 className="text-lg font-semibold mb-2">Shipping Address</h3>
             <p>{SingleOrder?.data.shippingAddress}</p>
           </div>

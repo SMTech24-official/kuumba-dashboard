@@ -10,6 +10,8 @@ import { logout, setUser } from "../features/auth/authSlice";
 //192.168.11.51:3007/api/v1
 // baseUrl: "https://api-kumba.code-commando.com/api/v1",
 const BaseUrl = "http://192.168.11.51:3007/api/v1/";
+// const BaseUrl = "http://192.168.11.117:3007/api/v1/";
+
 const baseQuery = fetchBaseQuery({
   baseUrl: BaseUrl,
   credentials: "include",

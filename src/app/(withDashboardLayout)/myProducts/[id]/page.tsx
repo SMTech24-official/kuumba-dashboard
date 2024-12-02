@@ -35,17 +35,18 @@ export default function AddBooksO() {
 
     useEffect(() => {
         const fetchImages = async () => {
-            console.log(productsData?.data?.images.length);
+            // console.log(productsData?.data?.images.length);
             if (productsData?.data?.images.length > 0) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const allFile = await Promise.all(
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    productsData?.data?.images.map(async (image: any) => {
-                        const convertImage = await createFile(image, "image");
+                    productsData?.data?.images.map(async (image: any, idx: number) => {
+                        const convertImage = await createFile(image, `images-${idx}`);
                         return convertImage;
                     })
                 );
                 setBookCover(allFile);
+                
             }
         };
 
@@ -93,8 +94,9 @@ export default function AddBooksO() {
                     true,
                     dispatch
                 );
-                if (finishRes?.ok) {
+                if (finishRes?.data?.success) {
                     setBookCover(null)
+                    router.push("/myProducts")
                 }
             }
 

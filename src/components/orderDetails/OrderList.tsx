@@ -73,7 +73,7 @@ export function OrderList() {
 
             {/* Mobile view */}
             <div className="md:hidden space-y-4">
-                {filteredOrders.map((order: Order) => (
+                {filteredOrders?.map((order: Order) => (
                     <div key={order.id} className='space-y-2 shadow-lg p-4'>
                         <div>
                             <p><strong>Order Id:</strong> {order.id}</p>

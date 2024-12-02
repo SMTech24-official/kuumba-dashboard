@@ -23,7 +23,7 @@ export default function AddBooksO() {
     const [addBook] = useAddBookMutation()
     const router = useRouter()
 
-
+    console.log(bookCover);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         try {
