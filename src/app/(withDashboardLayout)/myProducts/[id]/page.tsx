@@ -46,7 +46,6 @@ export default function AddBooksO() {
                     })
                 );
                 setBookCover(allFile);
-                
             }
         };
 
@@ -138,6 +137,15 @@ export default function AddBooksO() {
             setLimit((prev) => prev + 1)
         }
 
+
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleRemoveItem = (id?: string) => {
+        if (id) {
+            const element = document.getElementById(id);
+            element?.remove();
+        }
     }
 
     return (
@@ -182,6 +190,7 @@ export default function AddBooksO() {
                     {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         productsData?.data?.images?.map((data: any, idx: number) => <DnDInput
+                            handleDelete={handleRemoveItem}
                             key={idx}
                             width="w-full"
                             setNew={setBookCover}
@@ -194,6 +203,7 @@ export default function AddBooksO() {
                     {
                         new Array(limit).fill("").map((data, idx) => (
                             <DnDInput
+                                handleDelete={handleRemoveItem}
                                 key={idx}
                                 width="w-full"
                                 setNew={setBookCover}
